@@ -1,5 +1,6 @@
 {
     "AS1" :{
+        "NumAS" : "100",
         "IGP" : "RIP",
         "IP_range" :{
             "physical_interfaces" : "2001:100:100::/64",
@@ -17,6 +18,7 @@
     },
 
     "AS2" :{
+        "NumAS" : "200",
         "IGP" : "OSPF",
         "IP_range" :{
             "physical_interfaces" : "2001:200:200::/64",
