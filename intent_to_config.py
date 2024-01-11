@@ -4,7 +4,6 @@ def generate_config(as_info):
     configs = []
 
     for as_name, as_data in as_info.items():
-        # Générer la configuration pour chaque routeur dans l'AS
         for router in as_data["routeurs"]:
             config = f"hostname {router}\n"
 
@@ -12,10 +11,12 @@ def generate_config(as_info):
             if as_data["IGP"] == "RIP":
                 config += "router rip\n"
                 config += " version 2\n"
+                config += " no auto-summary\n"  # Supprimer la synthèse automatique
                 # Ajouter d'autres paramètres RIP si nécessaire
 
             elif as_data["IGP"] == "OSPF":
                 config += "router ospf 1\n"
+                config += " router-id 1.1.1.1\n"  # Remplacer par un ID unique par routeur
                 # Ajouter d'autres paramètres OSPF si nécessaire
 
             # Générer les configurations d'interfaces
@@ -25,31 +26,50 @@ def generate_config(as_info):
                     config += f" ipv6 address {as_data['IP_range']['physical_interfaces']} link-local\n"
                     # Ajouter d'autres configurations d'interface si nécessaire
 
+            # Générer la configuration BGP commune pour tous les routeurs
+            if "eBGP" in as_info:
+                for link in as_info["eBGP"]["links"]:
+                    config += f"router bgp <AS-X>\n"
+                    config += f" neighbor {link[0]} remote-as <AS-Y>\n"
+                    config += f" neighbor {link[0]} update-source Loopback0\n"
+                    # Ajouter d'autres configurations eBGP si nécessaire
+
+            # Générer la configuration spécifique pour le routeur
+            config += f"router bgp {as_data['BGP_AS']}\n"
+            config += f" bgp router-id 1.1.1.1\n"  # Remplacer par un ID unique par routeur
+            config += f" bgp log-neighbor-changes\n"
+            config += f" no bgp default ipv4-unicast\n"
+
+            for neighbor in as_data.get("BGP_neighbors", []):
+                config += f" neighbor {neighbor} remote-as {as_data['BGP_AS']}\n"
+                config += f" neighbor {neighbor} update-source Loopback0\n"
+                # Ajouter d'autres configurations BGP si nécessaire
+
+            # Générer les configurations de réseau pour BGP
+            config += " address-family ipv4\n"
+            config += " exit-address-family\n"
+            config += " address-family ipv6\n"
+            config += f"  network {as_data['IP_range']['physical_interfaces']}\n"
+            config += "  neighbor 2001:100::2 activate\n"
+            config += "  neighbor 2001:100::3 activate\n"
+            config += "  neighbor 2001:100:100:100::2 activate\n"
+            config += " exit-address-family\n"
+            config += "!\n"
+
             configs.append(config)
 
-    # Générer la configuration eBGP
-    ebgp_config = ""
-    if "eBGP" in as_info:
-        for link in as_info["eBGP"]["links"]:
-            ebgp_config += f"router bgp <AS-X>\n"
-            ebgp_config += f" neighbor {link[0]} remote-as <AS-Y>\n"
-            # Ajouter d'autres configurations eBGP si nécessaire
-
-    return configs, ebgp_config
+    return configs
 
 def main():
     with open("votre_fichier.json", "r") as file:
         as_info = json.load(file)
 
-    router_configs, ebgp_config = generate_config(as_info)
+    router_configs = generate_config(as_info)
 
     # Écrire les configurations dans des fichiers séparés
     for i, config in enumerate(router_configs):
-        with open(f"config_router{i+1}.txt", "w") as file:
+        with open(f"config_{as_info['AS1']['routeurs'][i]}.txt", "w") as file:
             file.write(config)
-
-    with open("config_ebgp.txt", "w") as file:
-        file.write(ebgp_config)
 
 if __name__ == "__main__":
     main()
