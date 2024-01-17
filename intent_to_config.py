@@ -4,8 +4,22 @@ def generate_config(as_info):
     configs = []
 
     for as_name, as_data in as_info.items():
-        for router in as_data["routeurs"]:
-            config = f"hostname {router}\n"
+        for router_name, router_data in as_data["routeurs"].items():
+            config = "version 15.2\nservice timestamps debug datetime msec\nservice timestamps log datetime msec\n!\n"
+            config += f"hostname {router}\n!\n"
+            config += "boot-start-marker\nboot-end-marker\n!\n"
+            config += "no aaa new-model\nno ip icmp rate-limit unreachable\nip cef\n!\n"
+            config += "no ip domain lookup\nipv6 unicast-routing\nipv6 cef\n!\n"
+            config +="multilink bundle-name authenticated\n!\n"
+            config += "ip tcp synwait-time 5\n!\n"
+            
+            # Générer les configurations d'interfaces
+            for subnetwork_number, interface_name in router_data.items():
+                config += f"interface {interface_name}\n"
+                config += f" ipv6 address {as_data['IP_range']['physical_interfaces']} link-local\n"
+                config += f" ipv6 address {as_data['IP_range']['physical_interfaces']}\n"
+                    # Ajouter d'autres configurations d'interface si nécessaire
+                    
 
             # Générer les configurations spécifiques en fonction de l'IGP
             if as_data["IGP"] == "RIP":
@@ -18,13 +32,6 @@ def generate_config(as_info):
                 config += "router ospf 1\n"
                 config += " router-id 1.1.1.1\n"  # Remplacer par un ID unique par routeur
                 # Ajouter d'autres paramètres OSPF si nécessaire
-
-            # Générer les configurations d'interfaces
-            for link in as_data["links"]:
-                for interface in link:
-                    config += f"interface {interface}\n"
-                    config += f" ipv6 address {as_data['IP_range']['physical_interfaces']} link-local\n"
-                    # Ajouter d'autres configurations d'interface si nécessaire
 
             # Générer la configuration BGP commune pour tous les routeurs
             if "eBGP" in as_info:

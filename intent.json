@@ -1,43 +1,29 @@
 {
-    "AS1" :{
-        "NumAS" : "100",
-        "IGP" : "RIP",
+    "AS100" :{
         "IP_range" :{
             "physical_interfaces" : "2001:100:100::/64",
             "loopback_interfaces" : "2001:100::/64"
         },
-        "routeurs" : [
-            "R1",
-            "R2",
-            "R3"
-        ],
-        "links" :[
-            ["R1_g1/0", "R2_g1/0"],
-            ["R2_g2/0","R3_g2/0"]
-        ]
+        "routers" : {
+            "R1" : {"SB1" : "GigabitEthernet1/0"},
+            "R2" : {"SB1" : "GigabitEthernet1/0", "SB2" : "GigabitEthernet2/0"},
+            "R3" : {"SB2" : "GigabitEthernet2/0"}
+        },
+        "IGP" : "RIP",
+        "neighbor" : {"R1" : "FastEthernet0/0"}
     },
 
-    "AS2" :{
-        "NumAS" : "200",
-        "IGP" : "OSPF",
+    "AS200" :{
         "IP_range" :{
             "physical_interfaces" : "2001:200:200::/64",
             "loopback_interfaces" : "2001:200::/64"
         },
-        "routeurs" : [
-            "R3",
-            "R4",
-            "R5"
-        ],
-        "links" :[
-            ["R4_g1/0", "R5_g1/0"],
-            ["R5_g2/0", "R6_g2/0"]
-        ]
-    },
-
-    "eBGP" :{
-        "links" :[
-            ["R1_f0/0", "R4_f0/0"]
-        ]
+        "routers" : {
+            "R4" : {"SB1" : "GigabitEthernet1/0"},
+            "R5" : {"SB1" : "GigabitEthernet1/0", "SB2" : "GigabitEthernet2/0"},
+            "R6" : {"SB2" : "GigabitEthernet2/0"}
+        },
+        "IGP" : "OSPF",
+        "neighbor" : {"R4" : "FastEthernet0/0"}
     }
 }
