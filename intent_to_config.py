@@ -10,7 +10,7 @@ def generate_ipv6_address(network_prefix, subnet_index, interface_index):
         ipv6_address=network_prefix_cut+f"::{interface_index}"
     elif interface_index=="0":
         network_prefix_cut = network_prefix[:network_prefix.index('::')]
-        ipv6_address=network_prefix_cut+f"::{subnet_index}"
+        ipv6_address=network_prefix_cut+f":{subnet_index}::"
     else:
         network_prefix_cut = network_prefix[:network_prefix.index('::')]
         ipv6_address=network_prefix_cut+f":{subnet_index}::{interface_index}"
@@ -82,7 +82,7 @@ def generate_config(intent_file, as_name, as_data, router_name, router_data):
                 if all_as_name == as_name:
                     if all_subnetwork_number[:2] == "SN":
                         ipv6_address = generate_ipv6_address(all_as_data['IP_range']['physical_interfaces'], all_subnetwork_number[2], "0")
-                        config += f"  network {ipv6_address}\n"
+                        config += f"  network {ipv6_address}/64\n"
                     if all_router_name != router_name:
                         if all_subnetwork_number[:2]=="LB":
                             ipv6_address = generate_ipv6_address(all_as_data['IP_range']['loopback_interfaces'], all_subnetwork_number[2], all_subnetwork_number[4])
