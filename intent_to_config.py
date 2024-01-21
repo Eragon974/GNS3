@@ -21,7 +21,7 @@ def generate_ipv6_address(network_prefix, subnet_index, interface_index):
 def generate_config(intent_file, as_name, as_data, router_name, router_data):
     configs = []
 
-    config = "version 15.2\nservice timestamps debug datetime msec\nservice timestamps log datetime msec\n!\n"
+    config = "!\nversion 15.2\nservice timestamps debug datetime msec\nservice timestamps log datetime msec\n!\n"
     config += f"hostname {router_name}\n!\n"
     config += "boot-start-marker\nboot-end-marker\n!\n"
     config += "no aaa new-model\nno ip icmp rate-limit unreachable\nip cef\n!\n"
