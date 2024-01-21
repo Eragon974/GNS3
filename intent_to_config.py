@@ -55,7 +55,7 @@ def generate_config(intent_file, as_name, as_data, router_name, router_data):
     #Générer la configuration BGP
 
     config += f"router bgp {as_name[2:]}\n"
-    config += f" bgp router-id {router_name[1:]}.{router_name[1:]}.{router_name[1:]}.{router_name[1:]}\n"
+    config += f" bgp router-id {router_name[1]}.{router_name[1]}.{router_name[1]}.{router_name[1]}\n"
     config += " bgp log-neighbor-changes\n"
     config += " no bgp default ipv4-unicast\n"
     for all_as_name, all_as_data in intent_file.items():
@@ -105,7 +105,7 @@ def generate_config(intent_file, as_name, as_data, router_name, router_data):
 
     elif as_data["IGP"] == "OSPF":
         config += "!\nipv6 router ospf 1\n"
-        config += " router-id 1.1.1.1\n"
+        config += f" router-id {router_name[1:]}.{router_name[1:]}.{router_name[1:]}.{router_name[1:]}\n"
         config += " passive-interface Loopback0\n"
     
     config += "!\n!\ncontrol-plane\n!\n"
