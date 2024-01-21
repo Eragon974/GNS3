@@ -94,7 +94,7 @@ def generate_config(intent_file, as_name, as_data, router_name, router_data):
                                 ipv6_address = generate_ipv6_address(all_as_data['IP_range']['eBGP_interfaces'], all_subnetwork_number[:4], all_subnetwork_number[5])
                                 config += f"  neighbor {ipv6_address} activate\n"
     
-    config += "  exit address-family\n!\n"
+    config += " exit address-family\n!\n"
     config += "ip forward-protocol nd\n!\n"
     config += "no ip http server\nno ip http secure-server\n!\n"
 
@@ -155,7 +155,7 @@ def main():
     for as_name, as_data in intent_file.items():
         for router_name, router_data in as_data["routers"].items():
             router_config = generate_config(intent_file, as_name, as_data, router_name, router_data)
-            with open(f"config_{router_name}.txt", "w") as file:
+            with open(f"i{router_name[1]}_startup-config.cfg", "w") as file:
                 file.write(router_config)
 
 if __name__ == "__main__":
