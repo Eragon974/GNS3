@@ -39,11 +39,13 @@ def generate_config(intent_file, as_name, as_data, router_name, router_data):
             config += " duplex full\n"
         if subnetwork_number[:2] == "SN":
             ipv6_address = generate_ipv6_address(as_data['IP_range']['physical_interfaces'], subnetwork_number[2], subnetwork_number[4])
+            config += f" ipv6 address {ipv6_address}/64\n"
         elif subnetwork_number[:2]=="LB":
             ipv6_address = generate_ipv6_address(as_data['IP_range']['loopback_interfaces'], subnetwork_number[2], subnetwork_number[4])
+            config += f" ipv6 address {ipv6_address}/128\n"
         elif subnetwork_number[:4]=="eBGP":
             ipv6_address = generate_ipv6_address(as_data['IP_range']['eBGP_interfaces'], subnetwork_number[:4], subnetwork_number[5])
-        config += f" ipv6 address {ipv6_address}/64\n"
+            config += f" ipv6 address {ipv6_address}/64\n"
         config += " ipv6 enable\n"
         if as_data["IGP"] == "RIP":
             if subnetwork_number[:2]=="SN":
@@ -100,7 +102,7 @@ def generate_config(intent_file, as_name, as_data, router_name, router_data):
 
     # Générer les configurations spécifiques en fonction de l'IGP
     if as_data["IGP"] == "RIP":
-        config += "!\nrouter rip ripng\n"
+        config += "!\nipv6 router rip ripng\n"
         config += " redistribute connected\n"
 
     elif as_data["IGP"] == "OSPF":
