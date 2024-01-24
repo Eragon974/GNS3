@@ -2,8 +2,7 @@ import json
 
 def generate_ipv6_address(network_prefix, subnet_index, interface_index):
     
-    if subnet_index=="0":
-        network_prefix_cut = network_prefix[:network_prefix.index('::')]
+    if subnet_index=="0":        network_prefix_cut = network_prefix[:network_prefix.index('::')] 
         ipv6_address=network_prefix_cut+f"::{interface_index}"
     elif subnet_index=="eBGP":
         network_prefix_cut = network_prefix[:network_prefix.index('::')]
@@ -115,40 +114,8 @@ def generate_config(intent_file, as_name, as_data, router_name, router_data):
     config += "line aux 0\n exec-timeout 0 0\n privilege level 15\n logging synchronous\n stopbits 1\n"
     config += "line vty 0 4\n login\n!\n!\nend"
 
-    """
-    # Générer la configuration BGP commune pour tous les routeurs
-    if "eBGP" in intent_file:
-        for link in intent_file["eBGP"]["links"]:
-            config += f"router bgp <AS-X>\n"
-            config += f" neighbor {link[0]} remote-as <AS-Y>\n"
-            config += f" neighbor {link[0]} update-source Loopback0\n"
-            # Ajouter d'autres configurations eBGP si nécessaire
-
-        # Générer la configuration spécifique pour le routeur
-        config += f"router bgp {as_data['BGP_AS']}\n"
-        config += f" bgp router-id 1.1.1.1\n"  # Remplacer par un ID unique par routeur
-        config += f" bgp log-neighbor-changes\n"
-        config += f" no bgp default ipv4-unicast\n"
-
-        for neighbor in as_data.get("BGP_neighbors", []):
-            config += f" neighbor {neighbor} remote-as {as_data['BGP_AS']}\n"
-            config += f" neighbor {neighbor} update-source Loopback0\n"
-            # Ajouter d'autres configurations BGP si nécessaire
-
-        # Générer les configurations de réseau pour BGP
-        config += " address-family ipv4\n"
-        config += " exit-address-family\n"
-        config += " address-family ipv6\n"
-        config += f"  network {as_data['IP_range']['physical_interfaces']}\n"
-        config += "  neighbor 2001:100::2 activate\n"
-        config += "  neighbor 2001:100::3 activate\n"
-        config += "  neighbor 2001:100:100:100::2 activate\n"
-        config += " exit-address-family\n"
-        config += "!\n"
-
-        """
-
     return config
+    
 
 def main():
     with open("intent.json", "r") as file:
