@@ -2,16 +2,16 @@ import json
 
 def generate_ipv6_address(network_prefix, subnet_index, interface_index):
     
-    if subnet_index=="0":
+    if subnet_index=="0": #loopback interfaces
         network_prefix_cut = network_prefix[:network_prefix.index('::')] 
         ipv6_address=network_prefix_cut+f"::{interface_index}"
-    elif subnet_index=="eBGP":
+    elif subnet_index=="eBGP": #eBGP interfaces
         network_prefix_cut = network_prefix[:network_prefix.index('::')]
         ipv6_address=network_prefix_cut+f"::{interface_index}"
-    elif interface_index=="0":
+    elif interface_index=="0": #subnet address
         network_prefix_cut = network_prefix[:network_prefix.index('::')]
         ipv6_address=network_prefix_cut+f":{subnet_index}::"
-    else:
+    else: #subnet interfaces
         network_prefix_cut = network_prefix[:network_prefix.index('::')]
         ipv6_address=network_prefix_cut+f":{subnet_index}::{interface_index}"
 
