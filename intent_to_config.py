@@ -2,7 +2,8 @@ import json
 
 def generate_ipv6_address(network_prefix, subnet_index, interface_index):
     
-    if subnet_index=="0":        network_prefix_cut = network_prefix[:network_prefix.index('::')] 
+    if subnet_index=="0":
+        network_prefix_cut = network_prefix[:network_prefix.index('::')] 
         ipv6_address=network_prefix_cut+f"::{interface_index}"
     elif subnet_index=="eBGP":
         network_prefix_cut = network_prefix[:network_prefix.index('::')]
@@ -115,7 +116,7 @@ def generate_config(intent_file, as_name, as_data, router_name, router_data):
     config += "line vty 0 4\n login\n!\n!\nend"
 
     return config
-    
+
 
 def main():
     with open("intent.json", "r") as file:
