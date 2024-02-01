@@ -1,0 +1,31 @@
+{
+    "AS100" :{
+        "IP_range" :{
+            "physical_interfaces" : "2001:100:100::/64",
+            "loopback_interfaces" : "2001:100::/64",
+            "eBGP_interfaces" : "2001:100:100:100::/64"
+        },
+        "routers" : {
+            "R1" : {"LB0_1" : "Loopback0", "SN1_1" : "GigabitEthernet1/0", "eBGP_1" : "FastEthernet0/0"},
+            "R2" : {"LB0_2" : "Loopback0", "SN1_2" : "GigabitEthernet1/0", "SN2_1" : "GigabitEthernet2/0"},
+            "R3" : {"LB0_3" : "Loopback0", "SN2_2" : "GigabitEthernet2/0"}
+        },
+        "IGP" : "RIP",
+        "neighbor" : {"R1" : "FastEthernet0/0"}
+    },
+
+    "AS200" :{
+        "IP_range" :{
+            "physical_interfaces" : "2001:200:200::/64",
+            "loopback_interfaces" : "2001:200::/64",
+            "eBGP_interfaces" : "2001:100:100:100::/64"
+        },
+        "routers" : {
+            "R4" : {"LB0_1" : "Loopback0", "SN1_1" : "GigabitEthernet1/0", "eBGP_2" : "FastEthernet0/0"},
+            "R5" : {"LB0_2" : "Loopback0", "SN1_2" : "GigabitEthernet1/0", "SN2_1" : "GigabitEthernet2/0"},
+            "R6" : {"LB0_3" : "Loopback0", "SN2_2" : "GigabitEthernet2/0"}
+        },
+        "IGP" : "OSPF",
+        "neighbor" : {"R4" : "FastEthernet0/0"}
+    }
+}

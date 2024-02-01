@@ -5,9 +5,6 @@ def generate_ipv6_address(network_prefix, subnet_index, interface_index):
     if subnet_index=="0": #loopback interfaces
         network_prefix_cut = network_prefix[:network_prefix.index('::')] 
         ipv6_address=network_prefix_cut+f"::{interface_index}"
-    elif subnet_index=="eBGP": #eBGP interfaces
-        network_prefix_cut = network_prefix[:network_prefix.index('::')]
-        ipv6_address=network_prefix_cut+f"::{interface_index}"
     elif interface_index=="0": #subnet address
         network_prefix_cut = network_prefix[:network_prefix.index('::')]
         ipv6_address=network_prefix_cut+f":{subnet_index}::"
@@ -44,7 +41,7 @@ def generate_config(intent_file, as_name, as_data, router_name, router_data):
             ipv6_address = generate_ipv6_address(as_data['IP_range']['loopback_interfaces'], subnetwork_number[2], subnetwork_number[4])
             config += f" ipv6 address {ipv6_address}/128\n"
         elif subnetwork_number[:4]=="eBGP":
-            ipv6_address = generate_ipv6_address(as_data['IP_range']['eBGP_interfaces'], subnetwork_number[:4], subnetwork_number[5])
+            ipv6_address = as_data['IP_range']['eBGP_interfaces'][subnetwork_number]
             config += f" ipv6 address {ipv6_address}/64\n"
         config += " ipv6 enable\n"
         if as_data["IGP"] == "RIP":
@@ -57,7 +54,7 @@ def generate_config(intent_file, as_name, as_data, router_name, router_data):
     #Générer la configuration BGP
 
     config += f"router bgp {as_name[2:]}\n"
-    config += f" bgp router-id {router_name[1]}.{router_name[1]}.{router_name[1]}.{router_name[1]}\n"
+    config += f" bgp router-id {router_name[1:]}.{router_name[1:]}.{router_name[1:]}.{router_name[1:]}\n"
     config += " bgp log-neighbor-changes\n"
     config += " no bgp default ipv4-unicast\n"
     for all_as_name, all_as_data in intent_file.items():
@@ -71,8 +68,8 @@ def generate_config(intent_file, as_name, as_data, router_name, router_data):
                 elif all_as_name != as_name:
                     if all_subnetwork_number[:4]=="eBGP":
                         for key in router_data.keys():
-                            if key.startswith("eBGP_"):
-                                ipv6_address = generate_ipv6_address(all_as_data['IP_range']['eBGP_interfaces'], all_subnetwork_number[:4], all_subnetwork_number[5])
+                            if key.startswith(all_subnetwork_number):
+                                ipv6_address = all_as_data['IP_range']['eBGP_interfaces'][all_subnetwork_number]
                                 config += f" neighbor {ipv6_address} remote-as {all_as_name[2:]}\n"
     config +=" !\n"
     config += " address-family ipv4\n exit-address-family\n !\n"
@@ -92,8 +89,8 @@ def generate_config(intent_file, as_name, as_data, router_name, router_data):
                 elif all_as_name != as_name:
                     if all_subnetwork_number[:4]=="eBGP":
                         for key in router_data.keys():
-                            if key.startswith("eBGP_"):
-                                ipv6_address = generate_ipv6_address(all_as_data['IP_range']['eBGP_interfaces'], all_subnetwork_number[:4], all_subnetwork_number[5])
+                            if key.startswith(all_subnetwork_number):
+                                ipv6_address = all_as_data['IP_range']['eBGP_interfaces'][all_subnetwork_number]
                                 config += f"  neighbor {ipv6_address} activate\n"
     
     config += " exit address-family\n!\n"
@@ -125,7 +122,7 @@ def main():
     for as_name, as_data in intent_file.items():
         for router_name, router_data in as_data["routers"].items():
             router_config = generate_config(intent_file, as_name, as_data, router_name, router_data)
-            with open(f"i{router_name[1]}_startup-config.cfg", "w") as file:
+            with open(f"i{router_name[1:]}_startup-config.cfg", "w") as file:
                 file.write(router_config)
 
 if __name__ == "__main__":
