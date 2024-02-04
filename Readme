@@ -1,0 +1,18 @@
+### Projet Python - Configuration de routeurs GNS3
+
+**Description :** 
+Ce projet Python est destiné à automatiser la création de fichiers de configuration de routeurs pour des topologies réseau GNS3 avec plusieurs systèmes autonomes (AS). 
+Il est particulièrement utile pour les ingénieurs réseau qui doivent déployer rapidement des configurations de routage dans des environnements complexes. 
+Le code génère des configurations de routeur incluant des paramètres tels que le choix du protocole de routage (RIP ou OSPF), les connexions inter-AS et les communautés BGP à partir d'un fichier JSON.
+On peut aussi lui fournir le fichier GNS3 en question et il copiera les fichiers dans les dossiers des routeurs à partir de leur nom.
+
+**Instructions d'utilisation :**
+1. Assurez-vous d'avoir Python installé sur votre système. Vous pouvez le télécharger depuis [le site officiel de Python](https://www.python.org/).
+2. Clonez ce dépôt Git sur votre machine locale en utilisant la commande `git clone https://url-de-votre-repo.git`.
+3. Ouvrez un terminal et naviguez jusqu'au répertoire du projet.
+4. Exécutez `python config_generator.py` pour générer les fichiers de configuration.
+5. Les fichiers de configuration seront créés dans un répertoire spécifié par le programme.
+
+**Contributeurs :**
+- Julien GEYER et Vincent FROMONT : Conception et développement du générateur de configuration et du fichier JSON.
+
