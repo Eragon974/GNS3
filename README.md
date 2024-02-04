@@ -8,7 +8,7 @@ Le script intent_to_config.py permet ensuite de générer les configurations des
 
 **Instructions d'utilisation :**
 1. Assurez-vous d'avoir Python installé sur votre système. Vous pouvez le télécharger depuis [le site officiel de Python](https://www.python.org/).
-2. Clonez ce dépôt Git sur votre machine locale en utilisant la commande `git clone https://github.com/Eragon974/GNS3`.
+2. Clonez ce dépôt Git sur votre machine locale en utilisant la commande `git clone https://github.com/Eragon974/GNS3.git`.
 3. Modifiez le fichier d'intention `intent.json` pour qu'il corresponde à votre topologie de réseau
 4. Editez le fichier `intent_to_config_with_policies.py` pour modifier le chemin de projet gns3 dans `pattern`
 5. Exécutez `intent_to_config_with_policies.py` pour générer les fichiers de configuration (assurez-vous d'avoir démarré votre projet GNS3 au moins une fois).
